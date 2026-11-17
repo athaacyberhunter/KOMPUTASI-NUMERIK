@@ -1,0 +1,36 @@
+# Algoritma Penyelesaian Sistem Persamaan Linear (SPL) 3 Variabel
+**Metode:** Eliminasi Gauss (*Gaussian Elimination*)
+
+## 1. Bentuk Umum Persamaan
+Diberikan sistem persamaan linear 3 variabel ($x, y, z$):
+- Persamaan 1: $a_{11}x + a_{12}y + a_{13}z = b_1$
+- Persamaan 2: $a_{21}x + a_{22}y + a_{23}z = b_2$
+- Persamaan 3: $a_{31}x + a_{32}y + a_{33}z = b_3$
+
+## 2. Langkah-Langkah Algoritma
+
+1. **Mulai (Start)**
+2. **Input Matriks Augmented ($A|B$):**
+   Masukkan koefisien variabel ke dalam matriks $A$ berukuran $3 \times 3$ dan konstanta hasil ke dalam vektor $B$ berukuran $3 \times 1$, lalu gabungkan menjadi matriks augmented $M$ berukuran $3 \times 4$:
+   $$M = \begin{bmatrix} a_{11} & a_{12} & a_{13} & | & b_1 \\ a_{21} & a_{22} & a_{23} & | & b_2 \\ a_{31} & a_{32} & a_{33} & | & b_3 \end{bmatrix}$$
+3. **Proses Eliminasi Maju (*Forward Elimination*) untuk membentuk Matriks Segitiga Atas:**
+   - **Langkah 3a (Nol-kan elemen di bawah pivot pertama $M[0][0]$):**
+     - Cek apakah $M[0][0] == 0$. Jika ya, tukar Baris 1 dengan baris di bawahnya yang elemen pertamanya tidak nol (*pivoting*).
+     - Hitung faktor pengali $f_{21} = \frac{M[1][0]}{M[0][0]}$, lalu perbarui Baris 2: $\text{Baris}_2 = \text{Baris}_2 - (f_{21} \times \text{Baris}_1)$.
+     - Hitung faktor pengali $f_{31} = \frac{M[2][0]}{M[0][0]}$, lalu perbarui Baris 3: $\text{Baris}_3 = \text{Baris}_3 - (f_{31} \times \text{Baris}_1)$.
+   - **Langkah 3b (Nol-kan elemen di bawah pivot kedua $M[1][1]$):**
+     - Cek apakah $M[1][1] == 0$. Jika ya, tukar Baris 2 dengan Baris 3.
+     - Hitung faktor pengali $f_{32} = \frac{M[2][1]}{M[1][1]}$, lalu perbarui Baris 3: $\text{Baris}_3 = \text{Baris}_3 - (f_{32} \times \text{Baris}_2)$.
+4. **Cek Kondisi Solusi:**
+   - Jika $M[2][2] == 0$ dan $M[2][3] \neq 0$, maka SPL **tidak memiliki solusi** (inkonsisten). Hentikan proses.
+   - Jika $M[2][2] == 0$ dan $M[2][3] == 0$, maka SPL **memiliki tak hingga banyak solusi**. Hentikan proses.
+5. **Proses Substitusi Mundur (*Back Substitution*):**
+   - Hitung nilai $z$:
+     $$z = \frac{M[2][3]}{M[2][2]}$$
+   - Hitung nilai $y$:
+     $$y = \frac{M[1][3] - (M[1][2] \times z)}{M[1][1]}$$
+   - Hitung nilai $x$:
+     $$x = \frac{M[0][3] - (M[0][1] \times y) - (M[0][2] \times z)}{M[0][0]}$$
+6. **Output:**
+   Tampilkan nilai solusi $x$, $y$, dan $z$.
+7. **Selesai (End)**
