@@ -1,0 +1,179 @@
+5 Buat Algoritma Penyelesaian Sistem Persamaan Linear 3 variabel dan simpan pada Repository "Komputasi Numerik" di Github
+
+6 Buat kode Python pada Google Colab berdasarkan nomor 5, dan simpan pada Repository "Komputasi Numerik" di Github. Pastikan kode tertata dalam cell-cell sehingga bisa di Running pada tiap cell.
+
+7 Edit kode Python tersebut di Github dengan menambahkan keterangan detail penjelasan tiap baris kode atau cell. 
+
+Saya tidak memiliki akses langsung ke akun GitHub maupun Google Colab Anda, sehingga tidak dapat membuat repository atau menyimpan file secara otomatis ke akun Anda. Namun, seluruh materi yang dibutuhkan untuk menyelesaikan tugas nomor 5, 6, dan 7 telah disiapkan secara lengkap agar dapat langsung disalin dan diunggah.
+
+Nomor 5: Algoritma Penyelesaian SPL 3 Variabel (Metode Eliminasi Gauss)
+Metode yang paling standar digunakan dalam Komputasi Numerik untuk menyelesaikan Sistem Persamaan Linear (SPL) 3 variabel adalah Metode Eliminasi Gauss dengan substitusi balik (back substitution).
+
+Berikut adalah algoritma yang dapat disimpan sebagai file README.md atau algoritma_spl_3_variabel.md di repository GitHub Komputasi Numerik:
+
+Markdown
+# Algoritma Penyelesaian SPL 3 Variabel (Eliminasi Gauss)
+
+Sistem Persamaan Linear 3 Variabel memiliki bentuk umum:
+- a11*x + a12*y + a13*z = b1
+- a21*x + a22*y + a23*z = b2
+- a31*x + a32*y + a33*z = b3
+
+## Langkah-Langkah Algoritma:
+
+1. **Mulai (Start)**
+2. **Input Matriks Augmented:**
+   Masukkan koefisien variabel dan konstanta hasil ke dalam matriks ukuran 3x4, sebut saja matriks `A` dengan elemen `A[i][j]` untuk `i = 0, 1, 2` dan `j = 0, 1, 2, 3`.
+3. **Proses Eliminasi Maju (Forward Elimination):**
+   Ubah matriks `A` menjadi matriks segitiga atas (elemen di bawah diagonal utama bernilai 0).
+   - Untuk `i` dari `0` sampai `1`:
+     - Cek elemen pivot `A[i][i]`. Jika `A[i][i] == 0`, tukar baris `i` dengan baris di bawahnya yang memiliki elemen tidak nol pada kolom `i` (*Partial Pivoting*).
+     - Untuk `k` dari `i + 1` sampai `2`:
+       - Hitung faktor pengali: `faktor = A[k][i] / A[i][i]`
+       - Untuk `j` dari `i` sampai `3`:
+         - Update elemen baris: `A[k][j] = A[k][j] - faktor * A[i][j]`
+4. **Cek Solusi Unik:**
+   Jika `A[2][2] == 0`, tampilkan pesan *"Sistem tidak memiliki solusi unik"* dan hentikan program.
+5. **Proses Substitusi Balik (Back Substitution):**
+   Hitung nilai variabel mulai dari baris paling bawah ke atas:
+   - `z = A[2][3] / A[2][2]`
+   - `y = (A[1][3] - A[1][2] * z) / A[1][1]`
+   - `x = (A[0][3] - A[0][1] * y - A[0][2] * z) / A[0][0]`
+6. **Output:**
+   Tampilkan nilai solusi `x`, `y`, dan `z`.
+7. **Selesai (End)**
+Nomor 6 & 7: Kode Python Terstruktur per Cell (Siap Colab & Sudah Berkomentar Lengkap)
+Kode di bawah ini sudah menggabungkan kebutuhan nomor 6 (terbagi per cell agar bisa dijalankan bertahap di Google Colab) sekaligus nomor 7 (dilengkapi penjelasan detail di setiap baris dan blok cell).
+
+Cara Menggunakan di Google Colab & GitHub:
+Buka Google Colab dan klik New Notebook.
+
+Buat 4 buah Code Cell, lalu salin masing-masing blok kode di bawah ini ke dalam cell yang sesuai.
+
+Jalankan (Run) setiap cell secara berurutan dari Cell 1 hingga Cell 4.
+
+Untuk menyimpan ke GitHub: klik menu File > Save a copy in GitHub, pilih repository Komputasi Numerik, beri nama file SPL_3_Variabel_Gauss.ipynb, lalu klik OK.
+
+Cell 1: Import Library dan Inisialisasi Matriks SPL
+Python
+# ==============================================================================
+# CELL 1: IMPORT LIBRARY & INPUT SISTEM PERSAMAAN LINEAR (SPL)
+# ==============================================================================
+# Mengimpor library NumPy untuk mempermudah operasi array dan matriks numerik
+import numpy as np
+
+# Contoh kasus SPL 3 variabel:
+# Persamaan 1: 2x +  y -  z =  8
+# Persamaan 2: -3x - y + 2z = -11
+# Persamaan 3: -2x + y + 2z = -3
+
+# Mendefinisikan matriks augmented berukuran 3x4 dengan tipe data float
+# Tipe data float wajib digunakan agar pembagian desimal tidak terpotong (integer division)
+A = np.array([
+    [ 2.0,  1.0, -1.0,   8.0],  # Baris 0 (Persamaan 1)
+    [-3.0, -1.0,  2.0, -11.0],  # Baris 1 (Persamaan 2)
+    [-2.0,  1.0,  2.0,  -3.0]   # Baris 2 (Persamaan 3)
+], dtype=float)
+
+# Menampilkan matriks awal ke layar untuk verifikasi input
+print("Matriks Augmented Awal (A):")
+print(A)
+Cell 2: Fungsi Eliminasi Maju (Forward Elimination)
+Python
+# ==============================================================================
+# CELL 2: PROSES ELIMINASI MAJU (MEMBENTUK MATRIKS SEGITIGA ATAS)
+# ==============================================================================
+def eliminasi_maju(matriks):
+    # Membuat salinan matriks agar data asli di Cell 1 tidak berubah
+    M = matriks.copy()
+    # Mengambil jumlah baris (n = 3)
+    n = len(M)
+    
+    # Loop utama untuk menentukan kolom pivot (i = 0 dan i = 1)
+    for i in range(n - 1):
+        # Partial Pivoting: Jika elemen diagonal utama (pivot) bernilai 0,
+        # tukar baris saat ini dengan baris di bawahnya yang tidak nol
+        if M[i][i] == 0:
+            for p in range(i + 1, n):
+                if M[p][i] != 0:
+                    M[[i, p]] = M[[p, i]]  # Menukar posisi baris i dan baris p
+                    break
+        
+        # Loop untuk mengeliminasi (meng-nol-kan) elemen di bawah pivot pada kolom i
+        for k in range(i + 1, n):
+            # Menghitung rasio/faktor pengali antara baris target (k) dan baris pivot (i)
+            faktor = M[k][i] / M[i][i]
+            
+            # Melakukan Operasi Baris Elementer (OBE): Baris_k = Baris_k - (faktor * Baris_i)
+            for j in range(i, n + 1):
+                M[k][j] = M[k][j] - faktor * M[i][j]
+                
+    # Mengembalikan matriks yang sudah berbentuk segitiga atas
+    return M
+
+# Menjalankan fungsi eliminasi maju pada matriks A dan mencetak hasilnya
+matriks_segitiga = eliminasi_maju(A)
+print("Matriks Setelah Eliminasi Maju (Segitiga Atas):")
+print(matriks_segitiga)
+Cell 3: Fungsi Substitusi Balik (Back Substitution)
+Python
+# ==============================================================================
+# CELL 3: PROSES SUBSTITUSI BALIK (MENCARI NILAI X, Y, Z)
+# ==============================================================================
+def substitusi_balik(M):
+    # Mengambil jumlah baris (n = 3)
+    n = len(M)
+    
+    # Pengecekan apakah elemen pivot terakhir bernilai nol (solusi tidak unik/tak hingga)
+    if M[n - 1][n - 1] == 0:
+        raise ValueError("Sistem tidak memiliki solusi unik (matriks singular).")
+    
+    # Membuat array kosong berukuran 3 untuk menampung hasil [x, y, z]
+    solusi = np.zeros(n)
+    
+    # Menghitung variabel dari baris paling bawah (indeks 2) naik ke baris atas (indeks 0)
+    for i in range(n - 1, -1, -1):
+        # Menghitung jumlah perkalian koefisien dengan variabel yang sudah ditemukan sebelumnya
+        jumlah_diketahui = 0.0
+        for j in range(i + 1, n):
+            jumlah_diketahui += M[i][j] * solusi[j]
+            
+        # Rumus substitusi balik: x_i = (konstanta - jumlah_diketahui) / koefisien_diagonal
+        solusi[i] = (M[i][n] - jumlah_diketahui) / M[i][i]
+        
+    # Mengembalikan array solusi [x, y, z]
+    return solusi
+
+# Menjalankan fungsi substitusi balik untuk mendapatkan nilai akhir
+hasil = substitusi_balik(matriks_segitiga)
+print("Solusi Berhasil Ditemukan!")
+Cell 4: Menampilkan Hasil dan Verifikasi Jawaban
+Python
+# ==============================================================================
+# CELL 4: OUTPUT HASIL AKHIR & VALIDASI AKURASI
+# ==============================================================================
+# Memecah array hasil ke dalam variabel x, y, dan z
+x, y, z = hasil[0], hasil[1], hasil[2]
+
+# Menampilkan nilai masing-masing variabel dengan pembulatan 4 angka di belakang koma
+print("=== HASIL PENYELESAIAN SPL 3 VARIABEL ===")
+print(f"Nilai x = {x:.4f}")
+print(f"Nilai y = {y:.4f}")
+print(f"Nilai z = {z:.4f}")
+
+# Validasi otomatis: Membandingkan hasil dengan fungsi bawaan np.linalg.solve()
+# Memisahkan matriks koefisien (3x3) dan vektor konstanta (3x1)
+koefisien = A[:, :-1]
+konstanta = A[:, -1]
+validasi_numpy = np.linalg.solve(koefisien, konstanta)
+
+print("\n=== VALIDASI DENGAN NUMPY LINALG.SOLVE ===")
+print(f"Referensi NumPy: x = {validasi_numpy[0]:.4f}, y = {validasi_numpy[1]:.4f}, z = {validasi_numpy[2]:.4f}")
+Panduan Langkah Menyimpan & Mengedit di GitHub (Untuk Bukti Screenshot Tugas)
+Jika dosen meminta bukti riwayat perubahan (commit history) bahwa Anda mengedit kode di GitHub untuk nomor 7:
+
+Upload notebook dari Google Colab ke GitHub tanpa komentar detail terlebih dahulu (lakukan commit pertama dengan pesan: "Menambahkan kode Python SPL 3 variabel").
+
+Buka file .ipynb atau .py tersebut langsung di website GitHub, lalu klik ikon pensil (Edit this file) di pojok kanan atas.
+
+Masukkan kode yang sudah diberi komentar lengkap di atas, lalu klik tombol hijau Commit changes... dengan pesan commit: "Menambahkan keterangan detail penjelasan tiap baris dan cell".
